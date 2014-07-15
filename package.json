@@ -1,0 +1,20 @@
+{
+  "name": "gulp-streamlinejs",
+  "description": "Streamline plugin for gulp",
+  "version": "0.0.1",
+  "homepage": "http://github.com/calvinwiebe/gulp-streamlinejs",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/calvinwiebe/gulp-streamlinejs"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "dependencies": {
+    "gulp-util": "~2.2.20",
+    "through2": "~0.5.1",
+    "streamline": "git+ssh://git@github.com:calvinwiebe/streamlinejs.git#test"
+  },
+  "optionalDependencies": {},
+  "author": "Calvin Wiebe"
+}
