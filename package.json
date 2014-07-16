@@ -13,7 +13,7 @@
   "dependencies": {
     "gulp-util": "~2.2.20",
     "through2": "~0.5.1",
-    "streamline": "git+ssh://git@github.com:calvinwiebe/streamlinejs.git#test"
+    "streamline": "git+ssh://git@github.com:calvinwiebe/streamlinejs.git#expose"
   },
   "optionalDependencies": {},
   "author": "Calvin Wiebe"
