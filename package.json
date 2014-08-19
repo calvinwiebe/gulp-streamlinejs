@@ -1,7 +1,7 @@
 {
   "name": "gulp-streamlinejs",
   "description": "Streamline plugin for gulp",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "homepage": "http://github.com/calvinwiebe/gulp-streamlinejs",
   "repository": {
     "type": "git",
