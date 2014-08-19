@@ -20,5 +20,12 @@
     "mocha": "1.21.4"
   },
   "optionalDependencies": {},
+  "keywords": [
+    "gulpplugin",
+    "gulp",
+    "streamline",
+    "build",
+    "coffee-script"
+  ],
   "author": "Calvin Wiebe"
 }
