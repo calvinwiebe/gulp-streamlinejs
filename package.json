@@ -1,7 +1,7 @@
 {
   "name": "gulp-streamlinejs",
   "description": "Streamline plugin for gulp",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "homepage": "http://github.com/calvinwiebe/gulp-streamlinejs",
   "repository": {
     "type": "git",
@@ -17,7 +17,7 @@
     "coffee-script": "^1.7.0"
   },
   "devDependencies": {
-    "mocha": "*"
+    "mocha": "1.21.4"
   },
   "optionalDependencies": {},
   "author": "Calvin Wiebe"

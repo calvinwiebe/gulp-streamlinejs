@@ -60,7 +60,7 @@ node read streams (i.e. Buffers). It is useful for unit testing, and also makes 
 you can dual purpose the plugin to do a quick programmatic compile.
 
 ##### Example:
-```javsacript
+```javascript
 fs.createReadStream('./foo._coffee')
 .pipe(streamline({
   singleMode: true,
