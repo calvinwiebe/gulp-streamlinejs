@@ -72,11 +72,11 @@ module.exports = function (options) {
       }
       file.contents = new Buffer(data.transformed);
       file.path = gutil.replaceExtension(file.path, '.js');
-      if (options.sourceMap && data.sourceMap) {
+      if (options.sourceMap && data.sourceMap && !options.bare) {
         file.sourceMap = data.sourceMap;
         writeSourceMap.call(this, file);
       }
-      this.push(file);
+      this.push(options.bare ? file.contents : file);
       cb();
     }
 

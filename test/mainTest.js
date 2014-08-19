@@ -31,6 +31,7 @@ var generateData = function(options) {
     });
     var result = {
       srcPath: pathsObj.src,
+      compiledPath: pathsObj.compiled,
       src: file,
       compiled: contents.compiled,
       sourceMap: contents.map
@@ -130,6 +131,39 @@ describe('gulp-streamlinejs', function() {
       done();
     })
     .write(testData.src);
+  });
+
+  it('Should use `bare` option and pipe a buffer to the stream', function(done) {
+    var testData = generateData({
+      fileName: 'foobar',
+      ext: '_coffee'
+    });
+
+    var tempPath = path.join(
+      path.dirname(testData.compiledPath),
+      'temp',
+      path.basename(testData.compiledPath)
+    );
+
+    var writeStream = fs.createWriteStream(tempPath);
+    writeStream
+    .on('finish', function() {
+      assert.equal(true, fs.existsSync(tempPath));
+      assert.equal(fs.readFileSync(tempPath).toString(), testData.compiled.toString());
+      fs.unlinkSync(tempPath);
+      done();
+    })
+    .on('err', done);
+
+    fs.createReadStream(testData.srcPath)
+      .on('err', done)
+      .pipe(streamline({
+        singleMode: true,
+        filePath: testData.srcPath,
+        bare: true
+      }))
+      .pipe(writeStream);
+
   });
 
 });
