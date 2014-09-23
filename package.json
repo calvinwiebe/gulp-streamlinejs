@@ -13,7 +13,7 @@
   "dependencies": {
     "gulp-util": "~2.2.20",
     "through2": "~0.5.1",
-    "streamline": "^0.10.13",
+    "streamline": "0.10.13",
     "coffee-script": "^1.7.0"
   },
   "devDependencies": {
