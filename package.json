@@ -11,10 +11,11 @@
     "node": ">=0.10.0"
   },
   "dependencies": {
+    "coffee-script": "^1.7.0",
     "gulp-util": "~2.2.20",
-    "through2": "~0.5.1",
     "streamline": "0.10.13",
-    "coffee-script": "^1.7.0"
+    "through2": "~0.5.1",
+    "vinyl-sourcemaps-apply": "^0.1.4"
   },
   "devDependencies": {
     "mocha": "1.21.4"

@@ -1,91 +1,86 @@
 var through = require('through2'),
-  streamline = require('streamline/lib/callbacks/compile'),
+  streamline = require('streamline/lib/transform'),
+  applySourceMap = require('vinyl-sourcemaps-apply'),
   gutil = require('gulp-util'),
   PluginError = gutil.PluginError,
-  Buffer = require('buffer').Buffer;
+  Buffer = require('buffer').Buffer,
+  path = require('path');
 
-// Error handle the inputted data. We support both gulp and non gulp mode. In non
-// gulp mode, we turn the inputted Buffer into a Vinyl File for ease, and then process.
-// If we find an error, bail out.
-var processInput = function(obj, options) {
-  var file;
-  if (obj instanceof Buffer && options.singleMode) {
-    if (!options.filePath) throw new PluginError('gulp-streamlinejs', 'Single mode expects a `filePath`');
-    file = new gutil.File({
-      path: options.filePath,
-      contents: obj
-    });
-  } else if (options.singleMode) {
-    throw new PluginError('gulp-streamlinejs', 'Single mode expects a buffer');
+// utility method to extend an object with an arbitrary amount of
+// other objects
+function extend() {
+  if (arguments.length === 0) return {};
+  else if (arguments.length === 1) return arguments[0];
+  var obj = arguments[0]
+  var others = [].slice.call(arguments, 1);
+  for (var i = 0; i < others.length; i++) {
+    for (var prop in others[i]) {
+      obj[prop] = others[i][prop];
+    }
   }
-  else {
-    file = obj;
-  }
-  if (file.isNull()) return null;
-  if (file.isStream()) throw new PluginError('gulp-streamlinejs', 'Streaming not supported');
-  return file;
+  return obj;
 }
 
-// If `options.sourceMap` and streamline gave us the sourcemap content, add it
-// to the stream
-var writeSourceMap = function(file) {
-  var sourceMapFile = new gutil.File({
-      cw: file.cwd,
-      base: file.base,
-      path: gutil.replaceExtension(file.path, '.map'),
-      contents: new Buffer(JSON.stringify(file.sourceMap))
-  });
-  this.push(sourceMapFile);
+function contextualMsg(options) {
+  return options.action + ': (' + options.path + ') with error: ' + options.err.message;
 }
 
 // Transform a file of a `._coffee`, `.coffee` or `._js` file via
 // `streamlinejs` to a `.js` file.
 //
 // * opt - options that match those that can be passed to streamline's
-// (`streamline/lib/compiler/compile`).compileFile()
-module.exports = function (options) {
+// [transform](`streamline/lib/transform)
+module.exports = function(options) {
   if (options == null) {
     options = {};
   }
-  // Turn this on to always run through the compiler, and not use streamline's built in on disk check.
-  options.force = true;
 
   // The through2 object transform function
-  function transform(obj, enc, cb) {
-    var file;
-    try {
-      file = processInput(obj, options);
-      // pass through the stream
-      if (file === null) return cb(null, obj);
-    } catch (err) {
-      return cb(err);
-    }
+  function transform(file, enc, cb) {
+    if (file.isNull()) return cb(null, file);
+    if (file.isStream()) return cb(new PluginError('gulp-streamlinejs', 'Streaming not supported'));
 
-    // Callback to pass to the streamline compiler
-    var finish = function(err, data) {
-      if (err) {
-        return cb(new PluginError('gulp-streamlinejs', err));
-      }
-      // the file cannot be streamlined, just pass it through to the next pipe.
-      else if (!data) {
-        return cb(null, file);
-      }
-      file.contents = new Buffer(data.transformed);
-      file.path = gutil.replaceExtension(file.path, '.js');
-      if (options.sourceMap && data.sourceMap && !options.bare) {
-        file.sourceMap = data.sourceMap;
-        writeSourceMap.call(this, file);
-      }
-      this.push(options.bare ? file.contents : file);
-      cb();
-    }
+    var originalPath = file.path;
+    var base = path.basename(file.path);
+    var ext = path.extname(file.path);
+    if (ext !== '._coffee' || ext !== '._js' || ext !== '.coffee') return cb(null, file);
+
+    // make a new copy of options each time as it will be manipulated by `streamline`
+    var opts = extend({}, options, {
+      filename: base,
+      sourceFiles: [base]
+    })
 
     try {
-      streamline.transform(finish.bind(this), file.path, options);
+      var data = streamline(file.contents.toString('utf8'), opts);
     } catch (err) {
-      return cb(new PluginError('gulp-streamlinejs', err));
+      return cb(new PluginError('gulp-streamlinejs', contextualMsg({
+        action: 'streamlining file',
+        path: originalPath,
+        err: err
+      })));
     }
 
+    if (!data) {
+      return cb(null, file);
+    }
+
+    file.path = gutil.replaceExtension(file.path, '.js');
+    file.contents = new Buffer(data.js);
+
+    if (opts.sourceMap && data.sourceMap) {
+      try {
+        applySourceMap(file, data.sourceMap);
+      } catch (err) {
+        return cb(new PluginError('gulp-streamlinejs', contextualMsg({
+          action: 'applying sourcemap to file',
+          path: originalPath,
+          err: err
+        })));
+      }
+    }
+
+    cb(null, file);
   }
 
   return through.obj(transform);
