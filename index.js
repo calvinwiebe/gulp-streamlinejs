@@ -43,7 +43,7 @@ module.exports = function(options) {
     var originalPath = file.path;
     var base = path.basename(file.path);
     var ext = path.extname(file.path);
-    if (ext !== '._coffee' || ext !== '._js' || ext !== '.coffee') return cb(null, file);
+    if (ext !== '._coffee' && ext !== '._js' && ext !== '.coffee') return cb(null, file);
 
     // make a new copy of options each time as it will be manipulated by `streamline`
     var opts = extend({}, options, {

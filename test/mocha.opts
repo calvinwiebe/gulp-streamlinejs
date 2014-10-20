@@ -1,0 +1,3 @@
+--compilers coffee:coffee-script/register,_coffee:streamline/register,_js:streamline/register
+--reporter spec
+--require should

@@ -1,5 +1,5 @@
-foo = (_) ->
-    console.log "Hey, I'm in streamline!"
+f = (_) ->
+    setTimeout _, 2000
 
-foo (err) ->
-    console.log "Hey, I'm done running!"
+f (err) ->
+    console.log 'This took 2 seconds in _coffee'
