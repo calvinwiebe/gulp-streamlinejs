@@ -1,5 +1,5 @@
 var through = require('through2'),
-  streamline = require('streamline/lib/transform'),
+  streamline = require('streamline/lib/transformSync').transform,
   applySourceMap = require('vinyl-sourcemaps-apply'),
   gutil = require('gulp-util'),
   PluginError = gutil.PluginError,
@@ -47,8 +47,10 @@ module.exports = function(options) {
 
     // make a new copy of options each time as it will be manipulated by `streamline`
     var opts = extend({}, options, {
-      filename: base,
-      sourceFiles: [base]
+      filename: originalPath,
+      sourceFiles: [originalPath],
+      quiet: true,
+      runtime: 'callbacks'
     })
 
     try {
@@ -66,11 +68,11 @@ module.exports = function(options) {
     }
 
     file.path = gutil.replaceExtension(file.path, '.js');
-    file.contents = new Buffer(data.js);
+    file.contents = new Buffer(data.code);
 
-    if (opts.sourceMap && data.sourceMap) {
+    if (opts.sourceMap && data.map) {
       try {
-        applySourceMap(file, data.sourceMap);
+        applySourceMap(file, data.map);
       } catch (err) {
         return cb(new PluginError('gulp-streamlinejs', contextualMsg({
           action: 'applying sourcemap to file',
