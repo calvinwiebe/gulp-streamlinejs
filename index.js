@@ -49,8 +49,7 @@ module.exports = function(options) {
     var opts = extend({}, options, {
       filename: originalPath,
       sourceFiles: [originalPath],
-      quiet: true,
-      runtime: 'callbacks'
+      quiet: true
     })
 
     try {

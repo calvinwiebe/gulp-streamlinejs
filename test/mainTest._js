@@ -66,7 +66,7 @@ describe('gulp-streamlinejs', function() {
       contents: fs.readFileSync(barJs)
     });
 
-    streamline()
+    streamline({runtime: 'callbacks'})
       .on('error', done)
       .on('data', function(data) {
         compare(data.contents.toString(), testData.compiled.toString());
@@ -82,7 +82,7 @@ describe('gulp-streamlinejs', function() {
       contents: fs.readFileSync(fooCoffee)
     });
 
-    streamline()
+    streamline({runtime: 'callbacks'})
       .on('error', done)
       .on('data', function(data) {
         compare(data.contents.toString(), testData.compiled.toString());
@@ -99,6 +99,7 @@ describe('gulp-streamlinejs', function() {
     });
 
     streamline({
+      runtime: 'callbacks',
       sourceMap: true
     })
       .on('error', done)
@@ -109,14 +110,15 @@ describe('gulp-streamlinejs', function() {
       .write(testData.file);
   });
 
-  it.skip('Should compile using fibers mode', function(done) {
+  it('Should compile using fibers mode', function(done) {
+    var fooCoffee = path.join(fixturesPath, 'foo._coffee');
     var testData = generateData({
-      filename: 'foo._coffee',
-      contents: ''
+      fullPath: fooCoffee,
+      contents: new Buffer('some fake data')
     });
 
     streamline({
-      fibers: true
+      runtime: 'fibers'
     })
       .on('error', done)
       .on('data', function(data) {
@@ -126,32 +128,15 @@ describe('gulp-streamlinejs', function() {
       .write(testData.file);
   });
 
-  it.skip('Should compile using fibers-fast mode', function(done) {
+  it('Should compile using generators mode', function(done) {
+    var fooCoffee = path.join(fixturesPath, 'foo._coffee');
     var testData = generateData({
-      filename: 'foo._coffee',
-      contents: ''
+      fullPath: fooCoffee,
+      contents: new Buffer('some fake data')
     });
 
     streamline({
-      fibers: true,
-      fast: true
-    })
-      .on('error', done)
-      .on('data', function(data) {
-        assert.equal(/(fibers-fast)/.test(data.contents.toString()), true);
-        done();
-      })
-      .write(testData.file);
-  });
-
-  it.skip('Should compile using generators mode', function(done) {
-    var testData = generateData({
-      filename: 'foo._coffee',
-      contents: ''
-    });
-
-    streamline({
-      generators: true
+      runtime: 'generators'
     })
       .on('error', done)
       .on('data', function(data) {
@@ -160,24 +145,4 @@ describe('gulp-streamlinejs', function() {
       })
       .write(testData.file);
   });
-
-  it.skip('Should compile using generators-fast mode', function(done) {
-    var testData = generateData({
-      filename: 'foo._coffee',
-      contents: ''
-    });
-
-    streamline({
-      generators: true,
-      fast: true
-    })
-      .on('error', done)
-      .on('data', function(data) {
-        assert.equal(/(generators-fast)/.test(data.contents.toString()), true);
-        done();
-      })
-      .write(testData.file);
-  });
-
-
 });
