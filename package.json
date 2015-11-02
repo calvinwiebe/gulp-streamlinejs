@@ -14,18 +14,19 @@
     "test": "./node_modules/.bin/mocha"
   },
   "dependencies": {
+    "babel": "^5.8.29",
     "coffee-script": "^1.7.0",
-    "fibers": "^1.0.7",
     "gulp-util": "~2.2.20",
-    "regenerator": "^0.8.41",
     "streamline": "1.0.7",
-    "streamline-runtime": "^1.0.13",
     "through2": "~0.5.1",
     "vinyl-sourcemaps-apply": "^0.1.4"
   },
   "devDependencies": {
+    "fibers": "^1.0.7",
     "mocha": "2.3.3",
-    "should": "^4.0.4"
+    "regenerator": "^0.8.41",
+    "should": "^4.0.4",
+    "streamline-runtime": "^1.0.13"
   },
   "optionalDependencies": {},
   "keywords": [

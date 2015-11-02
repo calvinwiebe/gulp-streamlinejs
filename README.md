@@ -1,3 +1,7 @@
+### Notice
+
+As of `v0.2.0` this plugin only works with `streamlinejs >= 1.x`. Please lock to an older version to use `streamlinejs <= 0.12.x`.
+
 ### Streamline Plugin for `gulp`
 
 Supports all modes of `streamlinejs` (callbacks, fibers, generators, and fast mode of each, respectively)
@@ -31,7 +35,7 @@ gulp.task('streamline', function() {
 ### Options
 
 It will take all the standard options that the internal streamline transform
-and compile functions take. See [here](https://github.com/calvinwiebe/streamlinejs/blob/full-transform-api/lib/transform/index.js#L22)
+and compile functions take. See [here](https://github.com/Sage/streamlinejs/blob/master/lib/util.js#L66)
 
 ##### Example:
 Produce source maps
