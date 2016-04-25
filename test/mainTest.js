@@ -2,7 +2,8 @@ var assert = require('assert'),
   fs = require('fs'),
   path = require('path'),
   should = require('should'),
-  exec = require('child_process').exec,
+  Promise = require('bluebird'),
+  execAsync = Promise.promisify(require('child_process').exec),
   File = require('gulp-util').File,
   streamline = require('../'),
   fixturesPath = __dirname + '/fixtures/';
@@ -47,19 +48,17 @@ var streamlineStrip = function(code) {
 describe('gulp-streamlinejs', function() {
 
   // compile all files in `fixtures` with normal streamline commandline tool
-  before(function(_) {
-    try {
-      exec('rm test/fixtures/temp/*', _);
-      exec('./node_modules/.bin/_coffee --runtime callbacks -d test/fixtures/temp -c test/fixtures/bar._js test/fixtures/foo._coffee', _);
-    } catch (err) {
-      console.error(err);
-    }
-    finally {
-      return;
-    }
+  before(function() {
+    this.timeout(10000);
+    return execAsync('rm test/fixtures/temp/foo.js test/fixtures/temp/bar.js')
+    .catch(function(err) {})
+    .then(function() {
+      return execAsync('./node_modules/.bin/_coffee --runtime callbacks -d test/fixtures/temp -c test/fixtures/bar._js test/fixtures/foo._coffee');
+    });
   });
 
   it('Should compile a ._js file to .js', function(done) {
+    this.timeout(10000);
     var barJs = path.join(fixturesPath, 'bar._js');
     var testData = generateData({
       fullPath: barJs,

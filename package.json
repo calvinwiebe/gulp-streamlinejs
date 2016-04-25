@@ -15,18 +15,18 @@
   },
   "dependencies": {
     "babel": "^5.8.29",
-    "coffee-script": "^1.7.0",
     "gulp-util": "~2.2.20",
-    "streamline": "1.0.7",
+    "streamline": "^2.0.6",
     "through2": "~0.5.1",
     "vinyl-sourcemaps-apply": "^0.1.4"
   },
   "devDependencies": {
+    "bluebird": "^3.3.5",
+    "coffee-script": "^1.10.0",
     "fibers": "^1.0.7",
     "mocha": "2.3.3",
-    "regenerator": "^0.8.41",
     "should": "^4.0.4",
-    "streamline-runtime": "^1.0.13"
+    "streamline-runtime": "^1.0.23"
   },
   "optionalDependencies": {},
   "keywords": [

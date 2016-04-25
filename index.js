@@ -1,5 +1,5 @@
 var through = require('through2'),
-  streamline = require('streamline/lib/transformSync').transform,
+  streamline = require('streamline').transform,
   applySourceMap = require('vinyl-sourcemaps-apply'),
   gutil = require('gulp-util'),
   PluginError = gutil.PluginError,
