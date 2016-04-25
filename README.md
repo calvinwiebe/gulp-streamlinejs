@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/calvinwiebe/gulp-streamlinejs.svg?branch=master)](https://travis-ci.org/calvinwiebe/gulp-streamlinejs)
+
 ### Notice
 
 As of `v0.2.0` this plugin only works with `streamlinejs >= 1.x`. Please lock to an older version to use `streamlinejs <= 0.12.x`.
